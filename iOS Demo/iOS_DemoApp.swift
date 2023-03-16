@@ -2,8 +2,6 @@
 //  iOS_DemoApp.swift
 //  iOS Demo
 //
-//  Created by Vikas Shah on 3/15/23.
-//
 
 import SwiftUI
 

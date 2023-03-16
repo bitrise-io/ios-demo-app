@@ -2,8 +2,6 @@
 //  iOS_DemoUITests.swift
 //  iOS DemoUITests
 //
-//  Created by Vikas Shah on 3/15/23.
-//
 
 import XCTest
 

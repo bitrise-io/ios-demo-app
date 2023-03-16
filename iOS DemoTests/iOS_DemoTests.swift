@@ -2,8 +2,6 @@
 //  iOS_DemoTests.swift
 //  iOS DemoTests
 //
-//  Created by Vikas Shah on 3/15/23.
-//
 
 import XCTest
 @testable import iOS_Demo
