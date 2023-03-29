@@ -7,45 +7,57 @@ app:
   - BITRISE_SCHEME: iOS Demo
   - BITRISE_DISTRIBUTION_METHOD: development
 workflows:
-  primary:
+  _setup:
+    description: |
+      This is a utility workflow for common tasks used by other workflows
+    steps:
+    - git-clone@8: {}
+    - cache-pull@2: {}
+    - recreate-user-schemes@1:
+        inputs:
+        - project_path: $BITRISE_PROJECT_PATH
+  test:
     description: |
       The workflow executes the tests. The *retry_on_failure* test repetition mode is enabled.
 
       Next steps:
       - Check out [Getting started with iOS apps](https://devcenter.bitrise.io/en/getting-started/getting-started-with-ios-apps.html).
     steps:
-    - git-clone@8: {}
-    - cache-pull@2: {}
-    - recreate-user-schemes@1:
-        inputs:
-        - project_path: $BITRISE_PROJECT_PATH
     - xcode-test@4:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
         - test_repetition_mode: retry_on_failure
+    - deploy-to-bitrise-io@2: {}
+  primary:
+    before_run:
+    - _setup
+    - test
+    description: |
+      This workflow tests, builds and deploys the debug version of the app as well as the generated test report using *Deploy to bitrise.io* Step.
+
+      For testing the *retry_on_failure* test repetition mode is enabled.
+    steps:
+    - xcode-build-for-simulator@0:
+        inputs:
+        - project_path: $BITRISE_PROJECT_PATH
+        - scheme: $BITRISE_SCHEME
+        - configuration: Debug
     - cache-push@2: {}
     - deploy-to-bitrise-io@2: {}
   deploy:
     description: |
-      The workflow tests, builds and deploys the app using *Deploy to bitrise.io* step.
+      This workflow tests, builds, and deploys the release version of the app.
 
-      For testing the *retry_on_failure* test repetition mode is enabled.
+      In order for this workflow to run successfully you will need to complete setting up code-signing.
 
       Next steps:
       - Set up [Connecting to an Apple service with API key](https://devcenter.bitrise.io/en/accounts/connecting-to-services/connecting-to-an-apple-service-with-api-key.html##).
       - Or further customise code signing following our [iOS code signing](https://devcenter.bitrise.io/en/code-signing/ios-code-signing.html) guide.
+    before_run:
+    - _setup
+    - test
     steps:
-    - git-clone@8: {}
-    - cache-pull@2: {}
-    - recreate-user-schemes@1:
-        inputs:
-        - project_path: $BITRISE_PROJECT_PATH
-    - xcode-test@4:
-        inputs:
-        - project_path: $BITRISE_PROJECT_PATH
-        - scheme: $BITRISE_SCHEME
-        - test_repetition_mode: retry_on_failure
     - xcode-archive@4:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
