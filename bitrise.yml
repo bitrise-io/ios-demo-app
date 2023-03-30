@@ -42,7 +42,7 @@ workflows:
     - deploy-to-bitrise-io@2: {}
   primary:
     description: |-
-      This workflow tests, builds and deploys the debug version of the app as well as the generated test report using *Deploy to bitrise.io* Step.
+      This workflow tests, builds and deploys the debug version of the app for iOS simulator as well as the generated test report using *Deploy to bitrise.io* Step.
 
       For testing the *retry_on_failure* test repetition mode is enabled.
     before_run:
