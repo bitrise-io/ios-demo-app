@@ -3,9 +3,9 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: ios
 trigger_map:
 - push_branch: '*'
-  workflow: primary
+  workflow: test-pr
 - pull_request_source_branch: '*'
-  workflow: primary
+  workflow: test-pr
 app:
   envs:
   - BITRISE_PROJECT_PATH: iOS Demo.xcodeproj
@@ -21,27 +21,32 @@ workflows:
     - recreate-user-schemes@1:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
-  test:
+  _test:
     description: |-
-      The workflow executes the tests. The *retry_on_failure* test repetition mode is enabled.
+      This workflow executes the tests. The *retry_on_failure* test repetition mode is enabled.
 
       Next steps:
       - Check out [Getting started with iOS apps](https://devcenter.bitrise.io/en/getting-started/getting-started-with-ios-apps.html).
+    before_run:
+      - _setup
     steps:
     - xcode-test@4:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
         - test_repetition_mode: retry_on_failure
+  test-pr:
+    before_run:
+    - _test
+    steps:
     - deploy-to-bitrise-io@2: {}
   primary:
-    before_run:
-    - _setup
-    - test
     description: |-
       This workflow tests, builds and deploys the debug version of the app as well as the generated test report using *Deploy to bitrise.io* Step.
 
       For testing the *retry_on_failure* test repetition mode is enabled.
+    before_run:
+    - _test
     steps:
     - xcode-build-for-simulator@0:
         inputs:
@@ -71,8 +76,7 @@ workflows:
       - Set up [Connecting to an Apple service with API key](https://devcenter.bitrise.io/en/accounts/connecting-to-services/connecting-to-an-apple-service-with-api-key.html##).
       - Or further customise code signing following our [iOS code signing](https://devcenter.bitrise.io/en/code-signing/ios-code-signing.html) guide.
     before_run:
-    - _setup
-    - test
+    - _test
     steps:
     - xcode-archive@4:
         inputs:
