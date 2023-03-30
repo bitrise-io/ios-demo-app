@@ -3,9 +3,9 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: ios
 trigger_map:
 - push_branch: '*'
-  workflow: test-pr
+  workflow: primary
 - pull_request_source_branch: '*'
-  workflow: test-pr
+  workflow: primary
 app:
   envs:
   - BITRISE_PROJECT_PATH: iOS Demo.xcodeproj
@@ -35,12 +35,12 @@ workflows:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
         - test_repetition_mode: retry_on_failure
-  test-pr:
+  primary:
     before_run:
     - _test
     steps:
     - deploy-to-bitrise-io@2: {}
-  primary:
+  deploy-debug:
     description: |-
       This workflow tests, builds and deploys the debug version of the app for iOS simulator as well as the generated test report using *Deploy to bitrise.io* Step.
 
