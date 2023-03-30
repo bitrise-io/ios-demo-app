@@ -62,7 +62,7 @@ workflows:
             set -e
             # debug log
             set -x
-            # zip the app bundle
+            # zip the app package
             cd $BITRISE_DEPLOY_DIR
             zip -r iOS\ Demo.app.zip iOS\ Demo.app
     - deploy-to-bitrise-io@2: {}
