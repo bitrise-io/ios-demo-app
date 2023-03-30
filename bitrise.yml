@@ -54,7 +54,7 @@ workflows:
             set -x
             # zip the app bundle
             cd $BITRISE_DEPLOY_DIR
-            zip iOS\ Demo.app.zip iOS\ Demo.app
+            zip -r iOS\ Demo.app.zip iOS\ Demo.app
     - deploy-to-bitrise-io@2: {}
   deploy:
     description: |-
