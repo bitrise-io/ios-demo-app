@@ -40,7 +40,7 @@ workflows:
     - _test
     steps:
     - deploy-to-bitrise-io@2: {}
-  deploy-debug:
+  deploy-demo:
     description: |-
       This workflow tests, builds and deploys the debug version of the app for iOS simulator as well as the generated test report using *Deploy to bitrise.io* Step.
 
